@@ -20,18 +20,22 @@ def get_instr_format(opcode):
 
     if opcode_bin == '0110011':  # Tipo R
         return  1 #Tipo R: operações lógico-aritméticas
-    elif opcode_bin in ['0010011', '0000011', '1100111']:  # Tipo I
+    elif opcode_bin == '0000011':  # Tipo I_1
         return 2 #Tipo I: operações com dados imediatos pequenos
+    elif opcode_bin == '0010011':  # Tipo I_2
+        return 3 #Tipo I: operações com dados imediatos pequenos
+    elif opcode_bin == '1100111':  # Tipo I_3
+        return 4 #Tipo I: operações com dados imediatos pequenos
     elif opcode_bin == '0100011':  # Tipo S
-        return 3 #Tipo S: operações de armazenamento (store)
+        return 5 #Tipo S: operações de armazenamento 
     elif opcode_bin == '1100011':  # Tipo SB
-        return 4 #Tipo SB: operações de salto condicional
+        return 6 #Tipo SB: operações de salto condicional
     elif opcode_bin in ['0010111', '0110111']:  # Tipo U
-        return 5 #Tipo U: operações com dados imediatos grandes
+        return 7 #Tipo U: operações com dados imediatos grandes
     elif opcode_bin == '1101111':  # Tipo UJ
-        return 6#Tipo UJ: operações de salto incondicional
+        return 8#Tipo UJ: operações de salto incondicional
     elif opcode_bin == "1110011":
-        return 7 #ecall
+        return 9 #ecall
     else: 
         return None
 
@@ -93,6 +97,93 @@ def imm21(ri):
     return imm21
 
 
+#funcao instrucao tabela 
+
+def gerarCodigoDeInstrucao(funct7,funct3,opcode):
+    
+    tipo = get_instr_format(opcode)
+
+    if(tipo == 1):#se for do tipo R
+        
+        funct = (funct7 << 3) | funct3
+        
+        #agora vamos procurat qual dos tipo r ela é
+        
+        print(funct)
+        
+        #funct = bin(funct)
+        
+        if funct == 0:
+            return (0x0 , 1 , "add") #retorna que é o add 
+        if funct == 256:
+            return (0x1 , 1, "sub") # instrucao que retorna o sub
+        if funct == 2 :
+            return (0x2 , 1 , "slt") # instrucao que retorna slt
+        if funct == 3 :
+            return (0x3 , 1 , "sltu" ) # retorna o sltu
+        if funct == 4:
+            return (0x4 , 1 , "xor") # retorna xor
+        if funct == 6 :
+            return (0x5 , 1 , "or") # retorna or
+        if funct == 7:
+            return (0x6 , 1 , "and")#retorna o and
+        
+    if(tipo == 2): #tipo I parte 1
+        
+        if funct3 == 0:
+            return (0x0 , 2 , "lb") #retorna o lb
+        if funct3 == 2:
+            return (0x1 , 2 , "lw") # retorna lw
+        if funct3 == 4:
+            return (0x2 , 2 , "lbu")#retorna o lbu
+    
+    if (tipo == 3): #tipo I parte 2
+        if funct3 == 0:
+            return (0x0 , 3 , "addi") # retorna addi
+        if funct3 == 6:
+            return (0x1 , 3 , "ori") # retorna ori
+        if funct3 == 7:
+            return (0x2 , 3 , "andi") # retorna andi
+        
+        funct = (funct7 << 3) | funct3
+        
+        if funct == 1:
+            return (0x3 , 3 , "slli") #retorna  slli
+        if funct == 5:
+            return (0x4 , 3 , "srli") #retorna srli
+        if funct == 261:
+            return(0x5  , 3 , "srai")#srai
+    
+    if(tipo == 4):
+        return (0x0 , 4 , "jalr")# retorna o jalr
+    
+    if(tipo == 5):
+        if funct3 == 0:
+            return(0x0 , 5 , "sb") #retorna o valor de sb
+        if funct3 == 2:
+            return(0x1 , 5 , "sw") # retorna o valor de sw
+        
+    if(tipo == 6):
+        if funct3 == 0:
+            return(0x0 , 6 ,"beq") # retorna beq
+        if funct3 == 1:
+            return(0x1 , 6 ,"bne") # retorna o valor de bne
+        if funct3 == 4:
+            return(0x2 , 6 ,"blt") # retorna o valor de blt
+        if funct3 == 5 :
+            return(0x3, 6 , "bge") #retorna bge
+        if funct3 == 6:
+            return(0x4 ,6 , "bltu") # retorna bltu
+        if funct3 == 7:
+            return(0x5 ,6 , "bgeu")# retorna bgeu
+        
+
+#100000001 0b0100000
+
+print(gerarCodigoDeInstrucao(0b0100000,0b101,0b1100011))
+
+
+
 # funcao decode 
 
 def decode():
@@ -113,8 +204,6 @@ def decode():
     imm13 = imm13_funct(imm12_s)
     imm21_uj = imm21(ri)
     
-    tipoDeCodigo = get_instr_format(opcode)
-    
     #padrao que nem dos slide 
     #tipo r (tipo ,func7,rs2,rs1,funct3,rd,opcode)
     #tipo i (tipo ,imm12_i,rs1,funct3,rd,opcode,shamt para as funcoes como slii)
@@ -123,32 +212,22 @@ def decode():
     #tipo U (tipo ,imm21,rd,opcode)
     #tipo UJ (tipo,imm21 ,rd,opcode)
     
-    match tipoDeCodigo:
-        case 1:
-            return [1,funct7,rs2,rs1,funct3,rd,opcode]
-        case 2:
-            return[2,imm12_i,rs1,funct3,rd,opcode,shamt]
-        case 3:
-            return[3,imm12_s,rs2,rs1,funct3,opcode]
-        case 4:
-            return[4,imm13,rs2,rs1,funct3,opcode]
-        case 5:
-            return[5,imm20_u,rd,opcode]
-        case 6 :
-            return[6,imm21_uj,rd,opcode]
-        case 7 :
-            return[7]
+
+def exculte(tipo,lista):  
+    
+    # vai ser um grande switch and case que chama as instrucoes e exceculta
+    
+    #primeiro passo separar por tipo
+    
+    pass
     
 
 
 
-
-
-
 #testes feitos durante a confexao do programa
-"""
-mem.carregarCodigo()
 
+mem.carregarCodigo()
+"""
 for i in range(0,22):
     print("-------------------------------------------------------------------------")
     fetch()
