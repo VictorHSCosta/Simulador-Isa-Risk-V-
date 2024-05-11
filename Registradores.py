@@ -190,7 +190,7 @@ def gerarCodigoDeInstrucao(funct7,funct3,opcode):
     
     if(tipo == 10):#tipo i
         return(0x0, 10 , "ecall")
-    
+    #caso nao encontre nada
     return None
 
 
