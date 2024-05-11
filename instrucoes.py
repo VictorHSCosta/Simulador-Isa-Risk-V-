@@ -34,7 +34,7 @@ class instrucao():
             valor_decimal = complemento
         return valor_decimal
     
-    def SignalParaUnsignal(number):
+    def SignalParaUnsignal(self,number):
         
         return number & 0xFFFFFFFF
         
@@ -110,8 +110,12 @@ class instrucao():
             return pc
     def bgeu(self,pc):
         
-        rs1 = self.SignalParaUnsignal(mem.getRegister(self.rs1))
-        rs2 = self.SignalParaUnsignal(mem.getRegister(self.rs2))
+        rs1 = mem.getRegister(self.rs1)
+        rs2 = mem.getRegister(self.rs2)
+        
+        rs1 = self.SignalParaUnsignal(rs1)
+        rs2 = self.SignalParaUnsignal(rs2)
+        
         
         imm13 = self.removeComplementoDe2_tipoSb()
         
@@ -119,9 +123,64 @@ class instrucao():
             return pc + imm13 -4
         else:
             return pc
+    def blt(self,pc):
         
-    
-
+        rs1 = mem.getRegister(self.rs1)
+        rs2 = mem.getRegister(self.rs2)
+        
+        imm13 = self.removeComplementoDe2_tipoSb()
+        
+        if (rs1 < rs2):
+            return pc + imm13 -4
+        else:
+            return pc
+    def bltu(self,pc):
+        
+        rs1 = mem.getRegister(self.rs1)
+        rs2 = mem.getRegister(self.rs2)
+        
+        rs1 = self.SignalParaUnsignal(rs1)
+        rs2 = self.SignalParaUnsignal(rs2)
+        
+        
+        imm13 = self.removeComplementoDe2_tipoSb()
+        
+        if rs1 < rs2:
+            return pc + imm13 -4
+        else:
+            return pc
+    def sub(self):
+        registrador1 = mem.getRegister(self.rs1)
+        registrador2 = mem.getRegister(self.rs2)
+        resustado = registrador1 - registrador2
+        
+        mem.setRegister(self.rd ,resustado)
+    def jal(self,pc):
+        
+        mem.setRegister(0x1,pc)
+        
+        mem.setRegister(self.rd,pc)
+        
+        print(self.imm21_uj,(pc + self.imm21_uj -4))
+        
+        return pc + self.imm21_uj -4
+    def jalr(self,pc):
+        
+        imm12_i = self.removeComplementoDe2_tipoI()
+        
+        print(imm12_i)
+        
+        print(mem.getRegister(self.rs1))
+        
+        endereco = mem.getRegister(self.rs1) + imm12_i 
+        
+        print(endereco)
+        
+        mem.setRegister(0x1,pc)#seta o valor de pc para ra
+        
+        mem.setRegister(self.rd,pc)#seta o valor de pc para rd
+        
+        return endereco
 
 
 
