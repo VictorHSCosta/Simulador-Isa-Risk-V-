@@ -251,8 +251,17 @@ def execute():
     if codigo == "bge":
         pc = icDec.bge(pc)
     if codigo == "bgeu":
-        pc = icDec.bgeu(pc)   
-        
+        pc = icDec.bgeu(pc) 
+    if codigo == "blt":
+        pc = icDec.blt(pc)
+    if codigo == "bltu":
+        pc = icDec.bltu(pc)
+    if codigo == "sub":
+        icDec.sub()
+    if codigo == "jal":
+        pc = icDec.jal(pc)
+    if codigo == "jalr":
+        pc = icDec.jalr(pc)
 
 def step():
     fetch()
@@ -264,7 +273,7 @@ def step():
 
 mem.carregarCodigo()
 
-for i in range(0,20):
+for i in range(0,24):
     print("-------------------------------------------------------------------------")
     step()
     print((mem.getRegister(6)),"x6")
