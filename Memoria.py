@@ -110,9 +110,6 @@ def iniciaRegistradores():
     reg[3] = 0x00001800
 
 def getRegister(addr): #pega o valor do registrador e retorna 
-    #aux = str(hex(addr))
-    
-    #addr = int(aux[2:])
     
     try:
         return reg[addr]
@@ -120,9 +117,6 @@ def getRegister(addr): #pega o valor do registrador e retorna
         raise "Registrador nao existe"
 
 def setRegister(addr,kte): #seta o valor de um registrador
-    #   aux = str(hex(addr))
-    
-    #    addr = int(aux[2:]) 
     
     if (addr != 0):
         try:

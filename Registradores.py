@@ -13,7 +13,7 @@ ri = 0x00000000
 
 def fetch():
     global pc ,ri
-    print("linha 16",pc)
+    print("Pc",pc)
     
     ri = mem.lw(pc, 0); # carrega instrução endereçada pelo pc
     pc = pc + 4; # aponta para a próxima instrução
@@ -262,18 +262,24 @@ def execute():
         pc = icDec.jal(pc)
     if codigo == "jalr":
         pc = icDec.jalr(pc)
+    if codigo == "or":
+        icDec.Funct_Or()
+    if codigo == "ori":
+        icDec.ori()
+    if codigo == "xor":
+        icDec.xor()
+    
 
 def step():
     fetch()
     decode()
     execute()
 
-
 #testes feitos durante a confexao do programa
 
 mem.carregarCodigo()
 
-for i in range(0,24):
+for i in range(0,6):
     print("-------------------------------------------------------------------------")
     step()
     print((mem.getRegister(6)),"x6")

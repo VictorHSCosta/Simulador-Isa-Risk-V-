@@ -1,26 +1,15 @@
 .text
 
-principal:
-
-	addi t1,t1,-1
+	addi t1,t1,0xff
 	
-	addi t2,zero,6
+	addi t2,t2,0xfe
 	
-	jal voltar
+	and t3,t1,t2
 	
-	bltu t1,t2,principal
-
-seder:
+	or t3,t1,t2
 	
-	addi t3,zero,100
+	ori t3,t2,500
 	
-	add t3,t3,t3
+	xor t3,t1,t2
 	
-igual:
-
-	bgeu t1,t2,principal
-	
-	beq t1,t2,seder	
-voltar:
-	ret	
 	

@@ -161,26 +161,44 @@ class instrucao():
         
         mem.setRegister(self.rd,pc)
         
-        print(self.imm21_uj,(pc + self.imm21_uj -4))
-        
         return pc + self.imm21_uj -4
     def jalr(self,pc):
         
         imm12_i = self.removeComplementoDe2_tipoI()
         
-        print(imm12_i)
-        
-        print(mem.getRegister(self.rs1))
-        
         endereco = mem.getRegister(self.rs1) + imm12_i 
-        
-        print(endereco)
         
         mem.setRegister(0x1,pc)#seta o valor de pc para ra
         
         mem.setRegister(self.rd,pc)#seta o valor de pc para rd
         
         return endereco
+    def Funct_Or(self):
+        rs1 = mem.getRegister(self.rs1)
+        rs2 = mem.getRegister(self.rs2)
+        
+        dado = rs1 | rs2
+        
+        mem.setRegister(self.rd, dado)
+
+    def ori(self):
+        
+        imm12_i = self.removeComplementoDe2_tipoI()
+        
+        rs1 = mem.getRegister(self.rs1)
+        
+        dado = rs1 | imm12_i
+        
+        mem.setRegister(self.rd ,dado)
+        
+    def xor(self):
+        rs1 = mem.getRegister(self.rs1)
+        rs2 = mem.getRegister(self.rs2)
+        
+        dado = rs1 ^ rs2
+        
+        mem.setRegister(self.rd, dado)
+
 
 
 
