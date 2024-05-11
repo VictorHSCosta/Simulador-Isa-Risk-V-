@@ -1,5 +1,8 @@
 import numpy as np
 import Memoria as mem
+import instrucoes as ic
+
+icDec = ic.instrucao() #instancio um objeto para ficar mais facil de passar para a funcao exculte
 
 #Parte do codigo que contem os principais registradores
 
@@ -214,18 +217,26 @@ def decode():
     imm13 = imm13_funct(imm12_s)
     imm21_uj = imm21(ri)
     
-    codigo = gerarCodigoDeInstrucao(funct7,funct3,opcode)
+    icDec.codigo = gerarCodigoDeInstrucao(funct7,funct3,opcode)
+    icDec.rs2 = rs2
+    icDec.rs1 = rs1
+    icDec.rd = rd
+    icDec.shamt =shamt
+    icDec.imm20_u =imm20_u
+    icDec.imm12_i = imm12_i
+    icDec.imm12_s = imm12_s
+    icDec.imm13 = imm13
+    icDec.imm21_uj =imm21_uj   
     
-    return(codigo, rs2,rs1,rd,shamt,imm20_u,imm12_i,imm12_s,imm13,imm21_uj) 
 
-def exculte(tipo,lista):  
+def execute():  
     
-    # vai ser um grande switch and case que chama as instrucoes e exceculta
-    
-    #primeiro passo separar por tipo
-    
-    pass
-    
+    icDec.achaInstucao()
+
+def step():
+    fetch()
+    decode()
+    execute()
 
 
 
@@ -233,6 +244,14 @@ def exculte(tipo,lista):
 
 mem.carregarCodigo()
 
+for i in range(0,22):
+    print("-------------------------------------------------------------------------")
+    step()
+    print((mem.getRegister(5)),"x5")
+    print((mem.getRegister(6)),"x6")
+    print((mem.getRegister(0)),"x0")
+    print((mem.getRegister(10)),"x10")
+    print((mem.getRegister(17)),"x17")
 """
 for i in range(0,22):
     print("-------------------------------------------------------------------------")

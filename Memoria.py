@@ -4,7 +4,7 @@ import time
 # memoria e registradores 
 
 mem = np.zeros(16384, dtype=np.uint8)
-reg = np.zeros(32,dtype=np.uint32)
+reg = np.zeros(32,dtype=np.int32)
 
 #Funcoes de leitura e escrita da memoria
 
@@ -109,25 +109,25 @@ def iniciaRegistradores():
     reg[3] = 0x00001800
 
 def getRegister(addr): #pega o valor do registrador e retorna 
-    aux = str(hex(addr))
+    #aux = str(hex(addr))
     
-    addr = int(aux[2:])
+    #addr = int(aux[2:])
     
     try:
         return reg[addr]
     except: 
-        print("Registrador nao existe")
+        raise "Registrador nao existe"
 
 def setRegister(addr,kte): #seta o valor de um registrador
-    aux = str(hex(addr))
+    #   aux = str(hex(addr))
     
-    addr = int(aux[2:])
+    #    addr = int(aux[2:]) 
     
     if (addr != 0):
         try:
             reg[addr] = kte
         except:
-            print(f"Erro ao preecher o valor do registrador 0x{addr}")
+            raise f"Erro ao preecher o valor do registrador 0x{addr}"
 
 
 
