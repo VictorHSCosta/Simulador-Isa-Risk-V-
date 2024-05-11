@@ -201,27 +201,22 @@ def decode():
     
     ri = int(ri,16)
     
-    opcode	= ri & 0x7F
+    opcode	= ri & 0x7F #nao precisa retornar5
     rs2		= (ri >> 20) & 0x1F
     rs1		= (ri >> 15) & 0x1F
     rd		= (ri >> 7)  & 0x1F
     shamt	= (ri >> 20) & 0x1F
-    funct3	= (ri >> 12) & 0x7
-    funct7  = (ri >> 25)
+    funct3	= (ri >> 12) & 0x7 # nao precisa mandar
+    funct7  = (ri >> 25) # nao precisa retornar
     imm20_u = (ri & 0xFFFFF000)
     imm12_i = (ri & 0xFFFFFFFF) >> 20
     imm12_s = imm12_s_funct(ri)
     imm13 = imm13_funct(imm12_s)
     imm21_uj = imm21(ri)
     
-    #padrao que nem dos slide 
-    #tipo r (tipo ,func7,rs2,rs1,funct3,rd,opcode)
-    #tipo i (tipo ,imm12_i,rs1,funct3,rd,opcode,shamt para as funcoes como slii)
-    #tipo s (tipo ,imm12_s ,rs2,rs1,funct3,opcode)
-    #tipo sB (tipo ,imm13 ,rs2,rs1,opcode)
-    #tipo U (tipo ,imm21,rd,opcode)
-    #tipo UJ (tipo,imm21 ,rd,opcode)
+    codigo = gerarCodigoDeInstrucao(funct7,funct3,opcode)
     
+    return(codigo, rs2,rs1,rd,shamt,imm20_u,imm12_i,imm12_s,imm13,imm21_uj) 
 
 def exculte(tipo,lista):  
     
@@ -237,6 +232,7 @@ def exculte(tipo,lista):
 #testes feitos durante a confexao do programa
 
 mem.carregarCodigo()
+
 """
 for i in range(0,22):
     print("-------------------------------------------------------------------------")
