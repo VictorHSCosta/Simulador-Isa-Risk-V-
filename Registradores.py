@@ -30,12 +30,14 @@ def get_instr_format(opcode):
         return 5 #Tipo S: operações de armazenamento 
     elif opcode_bin == '1100011':  # Tipo SB
         return 6 #Tipo SB: operações de salto condicional
-    elif opcode_bin in ['0010111', '0110111']:  # Tipo U
-        return 7 #Tipo U: operações com dados imediatos grandes
+    elif opcode_bin == '0010111':  # Tipo U apuic
+        return 7 #Tipo U
+    elif opcode_bin == '0110111': #tipo lui
+        return 8 #Tipo U
     elif opcode_bin == '1101111':  # Tipo UJ
-        return 8#Tipo UJ: operações de salto incondicional
+        return 9#jal
     elif opcode_bin == "1110011":
-        return 9 #ecall
+        return 10 #ecall
     else: 
         return None
 
@@ -176,12 +178,20 @@ def gerarCodigoDeInstrucao(funct7,funct3,opcode):
             return(0x4 ,6 , "bltu") # retorna bltu
         if funct3 == 7:
             return(0x5 ,6 , "bgeu")# retorna bgeu
-        
-
-#100000001 0b0100000
-
-print(gerarCodigoDeInstrucao(0b0100000,0b101,0b1100011))
-
+    
+    if(tipo == 7):
+        return(0x0 ,7 ,"auipc") #retorna uipc
+    
+    if(tipo == 8):
+        return(0x0 ,8, "lui")
+    
+    if(tipo == 9):
+        return(0x0 , 9, "jal")
+    
+    if(tipo == 10):#tipo i
+        return(0x0, 10 , "ecall")
+    
+    return None
 
 
 # funcao decode 
@@ -267,6 +277,7 @@ print(bin(code))
 
 
 
+print(gerarCodigoDeInstrucao(0b0100000,0b010,0b1101111))
 
 
 
