@@ -231,7 +231,18 @@ def decode():
 
 def execute():  
     
-    icDec.achaInstucao()
+    codigo = icDec.codigo[2]
+        
+    if codigo == "add":
+        icDec.add()
+    if codigo == "addi":
+        icDec.addi()
+    if codigo == "and":
+        icDec.Funct_And()
+    if codigo == "andi":
+        icDec.andi()
+    if codigo == "auipc":
+        icDec.auipc(pc)
 
 def step():
     fetch()
@@ -239,19 +250,47 @@ def step():
     execute()
 
 
-
 #testes feitos durante a confexao do programa
 
 mem.carregarCodigo()
 
-for i in range(0,22):
+for i in range(0,21):
     print("-------------------------------------------------------------------------")
     step()
-    print((mem.getRegister(5)),"x5")
     print((mem.getRegister(6)),"x6")
-    print((mem.getRegister(0)),"x0")
-    print((mem.getRegister(10)),"x10")
+    print((mem.getRegister(7)),"x7")
+    print((mem.getRegister(28)),"x28")
+    print((mem.getRegister(29)),"x29")
     print((mem.getRegister(17)),"x17")
+    print((mem.getRegister(10)),"x10")
+    print((mem.getRegister(5)),"x5")
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
 """
 for i in range(0,22):
     print("-------------------------------------------------------------------------")
