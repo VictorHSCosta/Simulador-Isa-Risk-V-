@@ -15,16 +15,9 @@ class instrucao():
         self.imm13 = 0x0
         self.imm21_uj = 0x0
         
-    def achaInstucao(self):
         
-        codigo = self.codigo[2]
         
-        if codigo == "add":
-            self.add()
-        if codigo == "addi":
-            self.addi()
-            
-    def sign_extend_tipoI(self):
+    def removeComplementoDe2_tipoI(self):
         complemento =self.imm12_i
         
         if complemento & (1 << 11):
@@ -41,18 +34,36 @@ class instrucao():
         resustado = registrador1 + registrador2
         
         mem.setRegister(self.rd ,resustado)
-    def addi(self):
+    def addi(self):#testada e aprovada
         
-        imm12_i = self.sign_extend_tipoI()
-        
-        print(imm12_i)
+        imm12_i = self.removeComplementoDe2_tipoI()
         
         resultado = imm12_i + mem.getRegister(self.rs1)
         
         mem.setRegister(self.rd,resultado)
+    def Funct_And(self):
         
-        print("parte interna",self.imm12_i,self.rs1,self.rd,resultado)
+        rs1 = mem.getRegister(self.rs1)
+        rs2 = mem.getRegister(self.rs2)
         
+        dado = rs1 & rs2
+        
+        mem.setRegister(self.rd ,dado)
+    def andi(self):
+        
+        imm12_i = self.removeComplementoDe2_tipoI()
+        
+        rs1 = mem.getRegister(self.rs1)
+        
+        dado = rs1 & imm12_i
+        
+        mem.setRegister(self.rd ,dado)
+    def auipc(self,pc):
+        
+        dado = pc  + self.imm20_u - 4
+        
+        mem.setRegister(self.rd,dado)        
+    
 
 
 
@@ -65,6 +76,48 @@ class instrucao():
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+"""    
+    def achaInstucao(self):
+        
+        codigo = self.codigo[2]
+        
+        if codigo == "add":
+            self.add()
+        if codigo == "addi":
+            self.addi()
+        if codigo == "and":
+            self.Funct_And()
+        if codigo == "andi":
+            self.andi()
+            
+            
+            
+    
 def lw(lista):#tipo i (tipo ,imm12_i,rs1,funct3,rd,opcode,shamt para as funcoes como slii)
     constante  = lista[1]
     
@@ -73,4 +126,4 @@ def lw(lista):#tipo i (tipo ,imm12_i,rs1,funct3,rd,opcode,shamt para as funcoes 
     dados = mem.lw(registradorEndereço,constante)
     
     mem.setRegister(hex(list[4]),dados)
-    
+""" 
