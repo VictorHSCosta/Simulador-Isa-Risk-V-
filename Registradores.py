@@ -13,6 +13,8 @@ ri = 0x00000000
 
 def fetch():
     global pc ,ri
+    print("linha 16",pc)
+    
     ri = mem.lw(pc, 0); # carrega instrução endereçada pelo pc
     pc = pc + 4; # aponta para a próxima instrução
 
@@ -100,7 +102,6 @@ def imm21(ri):
     imm21 = imm21 | temp | primeiros12
     
     return imm21
-
 
 #funcao instrucao tabela 
 
@@ -196,7 +197,6 @@ def gerarCodigoDeInstrucao(funct7,funct3,opcode):
     #caso nao encontre nada
     return None
 
-
 # funcao decode 
 
 def decode():
@@ -230,6 +230,7 @@ def decode():
     
 
 def execute():  
+    global pc
     
     codigo = icDec.codigo[2]
         
@@ -243,6 +244,15 @@ def execute():
         icDec.andi()
     if codigo == "auipc":
         icDec.auipc(pc)
+    if codigo == "beq":
+        pc = icDec.beq(pc)
+    if codigo == "bne":
+        pc = icDec.bne(pc)
+    if codigo == "bge":
+        pc = icDec.bge(pc)
+    if codigo == "bgeu":
+        pc = icDec.bgeu(pc)   
+        
 
 def step():
     fetch()
@@ -254,7 +264,7 @@ def step():
 
 mem.carregarCodigo()
 
-for i in range(0,21):
+for i in range(0,20):
     print("-------------------------------------------------------------------------")
     step()
     print((mem.getRegister(6)),"x6")
@@ -264,6 +274,7 @@ for i in range(0,21):
     print((mem.getRegister(17)),"x17")
     print((mem.getRegister(10)),"x10")
     print((mem.getRegister(5)),"x5")
+    print((mem.getRegister(28)),"x28")
     
     
     

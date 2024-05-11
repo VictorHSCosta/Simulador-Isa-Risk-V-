@@ -15,7 +15,7 @@ class instrucao():
         self.imm13 = 0x0
         self.imm21_uj = 0x0
         
-        
+    #nessas funcoes podemos remover o complemento de 2 e obter os numeros negativos     
         
     def removeComplementoDe2_tipoI(self):
         complemento =self.imm12_i
@@ -24,7 +24,19 @@ class instrucao():
             return complemento | ~((1 << 12) - 1)
         else:
             return complemento
+    def removeComplementoDe2_tipoSb(self):
         
+        complemento = self.imm13
+        
+        if complemento & (1 << 31):
+            valor_decimal = -((1 << 32) - complemento)
+        else:
+            valor_decimal = complemento
+        return valor_decimal
+    
+    def SignalParaUnsignal(number):
+        
+        return number & 0xFFFFFFFF
         
     #instrucoes
         
@@ -62,7 +74,52 @@ class instrucao():
         
         dado = pc  + self.imm20_u - 4
         
-        mem.setRegister(self.rd,dado)        
+        mem.setRegister(self.rd,dado) 
+    def beq(self,pc):
+        
+        rs1 = mem.getRegister(self.rs1)
+        rs2 = mem.getRegister(self.rs2)
+        
+        imm13 = self.removeComplementoDe2_tipoSb()
+        
+        if rs1 == rs2:
+            return pc + imm13 -4
+        else:
+            return pc
+    def bne(self,pc):
+        
+        rs1 = mem.getRegister(self.rs1)
+        rs2 = mem.getRegister(self.rs2)
+        
+        imm13 = self.removeComplementoDe2_tipoSb()
+        
+        if rs1 != rs2:
+            return pc + imm13 -4
+        else:
+            return pc
+    def bge(self,pc):
+        
+        rs1 = mem.getRegister(self.rs1)
+        rs2 = mem.getRegister(self.rs2)
+        
+        imm13 = self.removeComplementoDe2_tipoSb()
+        
+        if ((rs1 > rs2) or (rs1 == rs2)):
+            return pc + imm13 -4
+        else:
+            return pc
+    def bgeu(self,pc):
+        
+        rs1 = self.SignalParaUnsignal(mem.getRegister(self.rs1))
+        rs2 = self.SignalParaUnsignal(mem.getRegister(self.rs2))
+        
+        imm13 = self.removeComplementoDe2_tipoSb()
+        
+        if ((rs1 > rs2) or (rs1 == rs2)):
+            return pc + imm13 -4
+        else:
+            return pc
+        
     
 
 

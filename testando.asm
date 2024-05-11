@@ -1,18 +1,21 @@
 .text
+
+principal:
+
 	addi t1,t1,-1
 	
-	addi t2,t2,-5
+	addi t2,zero,-5
 	
-	add t3,t2,t1
+	bgeu t1,t2,igual
+
+seder:
 	
-	and t4,t1,t2
+	addi t3,zero,100
 	
-	addi t2,x0,15
+igual:
+
+	bge t2,t1,principal
 	
-	andi t2,t2,12
-	
-	addi t2,x0,-15
-	
-	andi t2,t2,-25
+	beq t1,t2,seder	
 	
 	
