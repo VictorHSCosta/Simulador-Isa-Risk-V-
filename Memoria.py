@@ -9,6 +9,7 @@ reg = np.zeros(32,dtype=np.int32)
 #Funcoes de leitura e escrita da memoria
 
 def multiplo(reg,kte,numero):
+    
     if((reg+kte) % numero != 0): #verifica se o endereço é divisivel por 4
         raise ValueError(f"Endereço de memória não é múltiplo de {numero}")
     else:
