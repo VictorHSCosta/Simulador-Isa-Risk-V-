@@ -37,7 +37,7 @@ def get_instr_format(opcode):
 
 # funcao que tira o imm12 dos codigos tipo s
 
-def imm12_s(ri):
+def imm12_s_funct(ri):
     bitsMaisSignificativo = (ri >> 25) & 0x7F
     
     bitsMenosSignificativo = (ri >> 7) & 0x1F
@@ -53,7 +53,7 @@ def imm12_s(ri):
     return imm12_s_extended
 
 # consegue o valor de imm13 com base no valor de imm12
-def imm13(imm12_s):
+def imm13_funct(imm12_s):
     
     bit_0 = imm12_s & 1  # Extrai o bit 0
 
@@ -65,18 +65,32 @@ def imm13(imm12_s):
 
 def imm21(ri):
     
+    #primeira parte extende o sinal com base no bit msis significativo
+    
+    imm21 = 0x00000000
+    
     bit20 = ri >> 31 & 1
     
-    print(bit20)
+    if bit20 == 1:
+        imm21 = 0xFFF00000
+        
+    # extrai os 8 bits do meio [19:12]
+
+    temp = ri & 0xff000
     
+    #extrai os primeiros 12 bits [20 |10:1 | 11]
     
-
-# Exemplo de uso da função
-numero_hexadecimal = 0xe0000000
-resultado = imm21(numero_hexadecimal)
-print("Resultado:", resultado)
-
-
+    primeiros12 = ri & 0xFFF00000
+    
+    primeiros12 = (primeiros12 >> 20)
+    
+    # faz um a mesma coisa que o imm13 por isso podemos chamar a funcao aqui
+    
+    primeiros12 = imm13_funct(primeiros12)
+    
+    imm21 = imm21 | temp | primeiros12
+    
+    return imm21
 
 
 # funcao decode 
@@ -95,29 +109,63 @@ def decode():
     funct7  = (ri >> 25)
     imm20_u = (ri & 0xFFFFF000)
     imm12_i = (ri & 0xFFFFFFFF) >> 20
-    imm12_s = imm12_s(ri)
-    imm13 = imm13(imm12_s)
-    
+    imm12_s = imm12_s_funct(ri)
+    imm13 = imm13_funct(imm12_s)
+    imm21_uj = imm21(ri)
     
     tipoDeCodigo = get_instr_format(opcode)
     
+    #padrao que nem dos slide 
+    #tipo r (tipo ,func7,rs2,rs1,funct3,rd,opcode)
+    #tipo i (tipo ,imm12_i,rs1,funct3,rd,opcode,shamt para as funcoes como slii)
+    #tipo s (tipo ,imm12_s ,rs2,rs1,funct3,opcode)
+    #tipo sB (tipo ,imm13 ,rs2,rs1,opcode)
+    #tipo U (tipo ,imm21,rd,opcode)
+    #tipo UJ (tipo,imm21 ,rd,opcode)
+    
+    match tipoDeCodigo:
+        case 1:
+            return [1,funct7,rs2,rs1,funct3,rd,opcode]
+        case 2:
+            return[2,imm12_i,rs1,funct3,rd,opcode,shamt]
+        case 3:
+            return[3,imm12_s,rs2,rs1,funct3,opcode]
+        case 4:
+            return[4,imm13,rs2,rs1,funct3,opcode]
+        case 5:
+            return[5,imm20_u,rd,opcode]
+        case 6 :
+            return[6,imm21_uj,rd,opcode]
+        case 7 :
+            return[7]
     
 
 
+
+
+
+
+#testes feitos durante a confexao do programa
+"""
 mem.carregarCodigo()
 
+for i in range(0,22):
+    print("-------------------------------------------------------------------------")
+    fetch()
+    print(decode())
+    
 
-
-"""
 for i in range(0,22):
     print("-------------------------------------------------------------------------")
     fetch()
     decode()
-"""
+    
+    
+
+numero_hexadecimal = 0x11cdefff
+resultado = imm21(numero_hexadecimal)
 
 
-
-"""
 #code = imm12_s(0xABACADAE)
 code = imm12_s(0xABCD1111)
 
@@ -131,9 +179,6 @@ print(bin(code))
 
 
 #print(get_instr_format(opcode))
-    
-    
-    
     
     #print(hex(opcode))
     #print(imm20_u)
