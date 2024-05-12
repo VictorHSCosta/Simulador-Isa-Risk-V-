@@ -4,6 +4,8 @@ import instrucoes as ic
 
 icDec = ic.instrucao() #instancio um objeto para ficar mais facil de passar para a funcao exculte
 
+FlagInterruption = False
+
 #Parte do codigo que contem os principais registradores
 
 pc = 0x00000000
@@ -13,7 +15,7 @@ ri = 0x00000000
 
 def fetch():
     global pc ,ri
-    print("Pc",pc)
+    #print("Pc",pc)
     
     ri = hex(mem.lw(pc, 0)); # carrega instrução endereçada pelo pc
     pc = pc + 4; # aponta para a próxima instrução
@@ -230,7 +232,7 @@ def decode():
     
 
 def execute():  
-    global pc
+    global pc , FlagInterruption
     
     codigo = icDec.codigo[2]
         
@@ -284,18 +286,39 @@ def execute():
         icDec.sb()
     if codigo == "sw":
         icDec.sw()
+    if codigo == "ecall":
+        FlagInterruption = icDec.ecall()
 
 def step():
     fetch()
     decode()
     execute()
 
+def run():
+    while(True):
+        global FlagInterruption
+        
+        step()
+        
+        if pc >= 0x2000:
+            print("\n-- program is finished running (dropped off bottom) --")
+            break
+        
+        if FlagInterruption == True:
+            print("\n-- program is finished running (0) --")
+            break
+
+
 #testes feitos durante a confexao do programa
 
 mem.carregarCodigo()
 mem.carregarData()
 
-for i in range(0,20):
+run()
+
+"""
+
+for i in range(0,40):
     print("-------------------------------------------------------------------------")
     step()
     print((mem.getRegister(6)),"x6")
@@ -307,75 +330,4 @@ for i in range(0,20):
     print((mem.getRegister(5)),"x5")
     print((mem.getRegister(28)),"x28")
     
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-"""
-for i in range(0,22):
-    print("-------------------------------------------------------------------------")
-    fetch()
-    print(decode())
-    
-
-for i in range(0,22):
-    print("-------------------------------------------------------------------------")
-    fetch()
-    decode()
-    
-    
-
-numero_hexadecimal = 0x11cdefff
-resultado = imm21(numero_hexadecimal)
-
-
-#code = imm12_s(0xABACADAE)
-code = imm12_s(0xABCD1111)
-
-print(hex(code))
-print(bin(code))
-
-code = imm13(code)
-
-print(hex(code))
-print(bin(code))
-
-
-#print(get_instr_format(opcode))
-    
-    #print(hex(opcode))
-    #print(imm20_u)
-    #print(hex(rs1))
-    #print(hex(rs2))
-    #print(hex(rd))
-
-
-
-print(gerarCodigoDeInstrucao(0b0100000,0b010,0b1101111))
-
-
-
-
 """

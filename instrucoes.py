@@ -309,7 +309,39 @@ class instrucao():
         dado = mem.getRegister(self.rs2)
         
         mem.sw(endereco, imm12 ,dado)
+    def ecall(self):
         
+        registrador1 = mem.getRegister(17)
+        
+        registrador2 = mem.getRegister(10)
+        
+        if(registrador1 == 1):
+            print(registrador2 , end= " ")
+            
+            return False
+        
+        if (registrador1 == 10):
+            
+            return True
+        if(registrador1 == 4):
+            
+            endereco = mem.getRegister(10)
+            
+            i = 0
+            
+            while(True):
+                
+                letra = mem.lb(endereco,i) & 0xFF
+                
+                letra = chr(letra)
+                
+                print(letra ,end = '')
+                
+                if letra == '\x00':
+                    return False
+                
+                i += 1
+            
 
 
 
