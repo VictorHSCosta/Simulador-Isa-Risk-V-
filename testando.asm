@@ -1,26 +1,16 @@
+.data
+primos: .word 1, 3, 5, 7, 11, 13, 17, 19
+size: .word 8
+msg: .asciz "Os oito primeiros numeros primos sao : "
+space: .ascii " "
 .text
+	lui t1,100
+	
+	lui t2,200
+	
+	lui t3,300
+	
+	
+	
 
-principal:
-
-	addi t1,t1,-1
-	
-	addi t2,zero,6
-	
-	jal voltar
-	
-	bltu t1,t2,principal
-
-seder:
-	
-	addi t3,zero,100
-	
-	add t3,t3,t3
-	
-igual:
-
-	bgeu t1,t2,principal
-	
-	beq t1,t2,seder	
-voltar:
-	ret	
 	

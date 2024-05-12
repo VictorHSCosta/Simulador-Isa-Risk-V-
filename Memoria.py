@@ -28,7 +28,7 @@ def lw(reg, kte):
     
     word = np.uint32(word)
     
-    return (hex(word))
+    return word
 
 def sw(reg,	kte, word):  
     
@@ -53,11 +53,11 @@ def lb(reg, kte):
     
     byte = mem[endereco]
     
-    byte0 = 0xFF
-    
-    word = (byte0 << 24) + (byte0 << 16) + (byte0 << 8) + byte
-    
-    return (hex(word))
+    if byte & 0x80: 
+        word = (0xFFFFFF00 | byte) 
+    else:
+        word = byte  
+    return word
 
 def lbu(reg, kte):
     
@@ -68,7 +68,7 @@ def lbu(reg, kte):
     valor_unsigned = byte & 0xFFFFFFFF
 
     
-    return (hex(valor_unsigned))
+    return valor_unsigned
     
 def sb(reg,	kte, byte):
     
@@ -110,9 +110,6 @@ def iniciaRegistradores():
     reg[3] = 0x00001800
 
 def getRegister(addr): #pega o valor do registrador e retorna 
-    #aux = str(hex(addr))
-    
-    #addr = int(aux[2:])
     
     try:
         return reg[addr]
@@ -120,9 +117,6 @@ def getRegister(addr): #pega o valor do registrador e retorna
         raise "Registrador nao existe"
 
 def setRegister(addr,kte): #seta o valor de um registrador
-    #   aux = str(hex(addr))
-    
-    #    addr = int(aux[2:]) 
     
     if (addr != 0):
         try:
