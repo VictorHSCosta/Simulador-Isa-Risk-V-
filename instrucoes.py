@@ -341,8 +341,14 @@ class instrucao():
                     return False
                 
                 i += 1
-    def  slli():
-        pass
+    def  slli(self):
+        imm12_i = self.removeComplementoDe2_tipoI()
+        
+        rs1 = mem.getRegister(self.rs1)
+        
+        dado = rs1 << imm12_i
+        
+        mem.setRegister(self.rd,dado)
     
     def srai():
         pass
