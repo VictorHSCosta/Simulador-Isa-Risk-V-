@@ -15,7 +15,7 @@ def fetch():
     global pc ,ri
     print("Pc",pc)
     
-    ri = mem.lw(pc, 0); # carrega instrução endereçada pelo pc
+    ri = hex(mem.lw(pc, 0)); # carrega instrução endereçada pelo pc
     pc = pc + 4; # aponta para a próxima instrução
 
 # funcao que descobre o tipo 
@@ -195,7 +195,7 @@ def gerarCodigoDeInstrucao(funct7,funct3,opcode):
     if(tipo == 10):#tipo i
         return(0x0, 10 , "ecall")
     #caso nao encontre nada
-    return None
+    return (0, 0 ,"")
 
 # funcao decode 
 
@@ -268,7 +268,14 @@ def execute():
         icDec.ori()
     if codigo == "xor":
         icDec.xor()
-    
+    if codigo == "lw":
+        icDec.lw()
+    if codigo == "lb":
+        icDec.lb()
+    if codigo == "lbu":
+        icDec.lbu()
+    if codigo == "lui":
+        icDec.lui()
 
 def step():
     fetch()
@@ -278,8 +285,9 @@ def step():
 #testes feitos durante a confexao do programa
 
 mem.carregarCodigo()
+mem.carregarData()
 
-for i in range(0,6):
+for i in range(0,23):
     print("-------------------------------------------------------------------------")
     step()
     print((mem.getRegister(6)),"x6")

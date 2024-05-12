@@ -33,6 +33,16 @@ class instrucao():
         else:
             valor_decimal = complemento
         return valor_decimal
+    def removeComplementoDe2_tipoJ(self):
+        
+        complemento = self.imm21_uj
+        
+        if complemento & (1 << 31):
+            valor_decimal = -((1 << 32) - complemento)
+        else:
+            valor_decimal = complemento
+        return valor_decimal
+    
     
     def SignalParaUnsignal(self,number):
         
@@ -161,7 +171,9 @@ class instrucao():
         
         mem.setRegister(self.rd,pc)
         
-        return pc + self.imm21_uj -4
+        imm21_uj = self.removeComplementoDe2_tipoJ()
+        
+        return pc + imm21_uj -4
     def jalr(self,pc):
         
         imm12_i = self.removeComplementoDe2_tipoI()
@@ -198,6 +210,38 @@ class instrucao():
         dado = rs1 ^ rs2
         
         mem.setRegister(self.rd, dado)
+    def lb(self):
+        
+        imm12_i = self.removeComplementoDe2_tipoI()
+        
+        endereco = mem.getRegister(self.rs1)
+        
+        dado = mem.lb(endereco,imm12_i)
+        
+        mem.setRegister(self.rd,dado)
+    def lbu(self):
+        
+        imm12_i = self.removeComplementoDe2_tipoI()
+        
+        endereco = mem.getRegister(self.rs1)
+        
+        dado = mem.lbu(endereco,imm12_i)
+        
+        mem.setRegister(self.rd,dado)
+    def lw(self):
+        
+        imm12_i = self.removeComplementoDe2_tipoI()
+        
+        endereco = mem.getRegister(self.rs1)
+        
+        dado = mem.lw(imm12_i,endereco)
+        
+        mem.setRegister(self.rd,dado)
+    def lui(self):
+        
+        dado = self.imm20_u
+        
+        mem.setRegister(self.rd ,dado)
 
 
 
