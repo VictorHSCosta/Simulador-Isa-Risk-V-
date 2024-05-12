@@ -341,7 +341,14 @@ class instrucao():
                     return False
                 
                 i += 1
-            
+    def  slli():
+        pass
+    
+    def srai():
+        pass
+    
+    def srli():
+        pass
 
 
 

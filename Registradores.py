@@ -15,7 +15,6 @@ ri = 0x00000000
 
 def fetch():
     global pc ,ri
-    #print("Pc",pc)
     
     ri = hex(mem.lw(pc, 0)); # carrega instrução endereçada pelo pc
     pc = pc + 4; # aponta para a próxima instrução
@@ -288,6 +287,12 @@ def execute():
         icDec.sw()
     if codigo == "ecall":
         FlagInterruption = icDec.ecall()
+    if codigo == "slli":
+        icDec.slli()
+    if codigo == "srai":
+        icDec.srai()
+    if codigo == "srli":
+        icDec.srli()
 
 def step():
     fetch()
@@ -309,25 +314,3 @@ def run():
             break
 
 
-#testes feitos durante a confexao do programa
-
-mem.carregarCodigo()
-mem.carregarData()
-
-run()
-
-"""
-
-for i in range(0,40):
-    print("-------------------------------------------------------------------------")
-    step()
-    print((mem.getRegister(6)),"x6")
-    print((mem.getRegister(7)),"x7")
-    print((mem.getRegister(28)),"x28")
-    print((mem.getRegister(29)),"x29")
-    print((mem.getRegister(17)),"x17")
-    print((mem.getRegister(10)),"x10")
-    print((mem.getRegister(5)),"x5")
-    print((mem.getRegister(28)),"x28")
-    
-"""
