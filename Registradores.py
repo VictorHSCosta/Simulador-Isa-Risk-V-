@@ -276,6 +276,14 @@ def execute():
         icDec.lbu()
     if codigo == "lui":
         icDec.lui()
+    if codigo == "slt":
+        icDec.slt()
+    if codigo == "sltu":
+        icDec.sltu()
+    if codigo == "sb":
+        icDec.sb()
+    if codigo == "sw":
+        icDec.sw()
 
 def step():
     fetch()
@@ -287,7 +295,7 @@ def step():
 mem.carregarCodigo()
 mem.carregarData()
 
-for i in range(0,23):
+for i in range(0,20):
     print("-------------------------------------------------------------------------")
     step()
     print((mem.getRegister(6)),"x6")

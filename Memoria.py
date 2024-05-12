@@ -54,9 +54,10 @@ def lb(reg, kte):
     byte = mem[endereco]
     
     if byte & 0x80: 
-        word = (0xFFFFFF00 | byte) 
+        word =  (0xFFFF << 8)  | byte 
     else:
-        word = byte  
+        word = byte 
+    
     return word
 
 def lbu(reg, kte):
