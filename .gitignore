@@ -1,0 +1,5 @@
+git rm --cached C:\Users\victo_altre0s\Documents\Arquitetura e Organizacao de computadores\projeto2\Testes ras
+
+git rm --cached C:\Users\victo_altre0s\Documents\Arquitetura e Organizacao de computadores\projeto2\__pycache__
+
+git rm --cached \codigos originais

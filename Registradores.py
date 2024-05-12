@@ -16,7 +16,7 @@ ri = 0x00000000
 def fetch():
     global pc ,ri
     
-    ri = hex(mem.lw(pc, 0)); # carrega instrução endereçada pelo pc
+    ri = hex(mem.lw(pc, 0)); # tirei o hexa decimal daqui
     pc = pc + 4; # aponta para a próxima instrução
 
 # funcao que descobre o tipo 
@@ -203,7 +203,7 @@ def gerarCodigoDeInstrucao(funct7,funct3,opcode):
 def decode():
     global ri
     
-    ri = int(ri,16)
+    ri = int(ri,16)  
     
     opcode	= ri & 0x7F #nao precisa retornar5
     rs2		= (ri >> 20) & 0x1F
