@@ -54,9 +54,10 @@ def lb(reg, kte):
     byte = mem[endereco]
     
     if byte & 0x80: 
-        word = (0xFFFFFF00 | byte) 
+        word =  (0xFFFF << 8)  | byte 
     else:
-        word = byte  
+        word = byte 
+    
     return word
 
 def lbu(reg, kte):
@@ -125,60 +126,3 @@ def setRegister(addr,kte): #seta o valor de um registrador
             raise f"Erro ao preecher o valor do registrador 0x{addr}"
 
 
-
-
-#testes de todas as funcoes
-
-"""
-
-setRegister(0x0,0x400)
-setRegister(0x20,0xABACADEF)
-print(hex(getRegister(0x0)))
-print(hex(getRegister(0x20)))
-
-
-
-reg[0] = 0xAAAAA
-
-iniciaRegistradores()
-
-carregar_data()
-print(lw(8192,0))
-print(lw(8192,4))
-print(lw(8192,8))
-print(lw(8192,12))
-print(lw(8192,16))
-print(lw(8192,20))
-print(lw(8192,24))
-print(lw(8192,28))"""
-
-"""for i in range(8192,8392,4):
-    byte_decimal = lb(0,i)
-    
-    print(conversores.hex_to_ascii(byte_decimal)) """
-
-
-
-"""
-sw(0,4,0xABCDEF)
-
-print(lw(0,4))
-
-print(lw(0,8))
-#print(lb(0,3))"""
-"""
-#teste das funcoes da memoria
-sw(0,	0,	0xABACADEF)
-sb(4,	0,	1)
-sb(4,	1,	2)
-sb(4,	2,	3)
-sb(4,	3,	4)
-
-print(lb(0,	0))
-print(lb(0,	1))
-print(lb(0,	2))
-print(lb(0,	3))
-print(lbu(0,	0))
-print(lbu(0,	1))
-print(lbu(0,	2))
-print(lbu(0,	3))"""

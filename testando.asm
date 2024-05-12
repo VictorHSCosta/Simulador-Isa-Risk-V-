@@ -4,13 +4,18 @@ size: .word 8
 msg: .asciz "Os oito primeiros numeros primos sao : "
 space: .ascii " "
 .text
-	lui t1,100
+	la t1,primos
 	
-	lui t2,200
+	addi t2,zero,0xab
 	
-	lui t3,300
+	sw t2,0(t1)
 	
+	sw t2,4(t1)
 	
+	lw t3,0(t1)
 	
+	lb t3,0(t1)
+	
+	lb t3,1(t1)
 
 	

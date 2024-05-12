@@ -14,6 +14,7 @@ class instrucao():
         self.imm12_s = 0x0
         self.imm13 = 0x0
         self.imm21_uj = 0x0
+        self.numeroAux = 0
         
     #nessas funcoes podemos remover o complemento de 2 e obter os numeros negativos     
         
@@ -23,7 +24,8 @@ class instrucao():
         if complemento & (1 << 11):
             return complemento | ~((1 << 12) - 1)
         else:
-            return complemento
+            return complemento  
+        
     def removeComplementoDe2_tipoSb(self):
         
         complemento = self.imm13
@@ -42,12 +44,35 @@ class instrucao():
         else:
             valor_decimal = complemento
         return valor_decimal
-    
-    
+    def removeComplementoDe2_tipoS(self):
+        
+        complemento = self.imm12_s
+        
+        if complemento & (1 << 31):
+            valor_decimal = -((1 << 32) - complemento)
+        else:
+            valor_decimal = complemento
+        return valor_decimal
+    def removerComplementoDe2(self):
+        numero = self.numeroAux
+        
+        bits = bin(numero & 0xffffffff)[2:]
+
+        if bits[0] == '1':
+            bits_complemento_2 = ''
+            for bit in bits:
+                bits_complemento_2 += '1' if bit == '0' else '0'
+            
+            bits_complemento_2 = bin(int(bits_complemento_2, 2) + 1)[2:]
+            
+            return -int(bits_complemento_2, 2)
+        else:
+            return int(bits, 2)
+
     def SignalParaUnsignal(self,number):
         
         return number & 0xFFFFFFFF
-        
+    
     #instrucoes
         
     def add(self):
@@ -216,7 +241,9 @@ class instrucao():
         
         endereco = mem.getRegister(self.rs1)
         
-        dado = mem.lb(endereco,imm12_i)
+        self.numeroAux = mem.lb(endereco,imm12_i)
+        
+        dado  = self.removerComplementoDe2()
         
         mem.setRegister(self.rd,dado)
     def lbu(self):
@@ -242,6 +269,79 @@ class instrucao():
         dado = self.imm20_u
         
         mem.setRegister(self.rd ,dado)
+    def slt(self):
+        
+        rs1 = mem.getRegister(self.rs1)
+        rs2 = mem.getRegister(self.rs2)
+        
+        if rs1 < rs2:
+            dado = 1
+        else:
+            dado = 0 
+        
+        mem.setRegister(self.rd , dado)
+    def sltu(self):
+        
+        rs1 = mem.getRegister(self.rs2)
+        rs2 = mem.getRegister(self.rs1)
+        
+        if rs1 < rs2:  # Comparação sem sinal
+            dado = 1
+        else:
+            dado = 0 
+            
+        mem.setRegister(self.rd, dado)
+    def sb(self):
+        
+        imm12 = self.removeComplementoDe2_tipoS()
+        
+        endereco = mem.getRegister(self.rs2)
+        
+        dado = mem.getRegister(self.rs1)
+        
+        mem.sb(endereco, imm12 ,dado)
+    def sw(self):
+        
+        imm12 = self.removeComplementoDe2_tipoS()
+        
+        endereco = mem.getRegister(self.rs1)
+        
+        dado = mem.getRegister(self.rs2)
+        
+        mem.sw(endereco, imm12 ,dado)
+    def ecall(self):
+        
+        registrador1 = mem.getRegister(17)
+        
+        registrador2 = mem.getRegister(10)
+        
+        if(registrador1 == 1):
+            print(registrador2 , end= " ")
+            
+            return False
+        
+        if (registrador1 == 10):
+            
+            return True
+        if(registrador1 == 4):
+            
+            endereco = mem.getRegister(10)
+            
+            i = 0
+            
+            while(True):
+                
+                letra = mem.lb(endereco,i) & 0xFF
+                
+                letra = chr(letra)
+                
+                print(letra ,end = '')
+                
+                if letra == '\x00':
+                    return False
+                
+                i += 1
+            
 
 
 
