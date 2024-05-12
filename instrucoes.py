@@ -265,8 +265,9 @@ class instrucao():
         
         mem.setRegister(self.rd,dado)
     def lui(self):
+        self.numeroAux = self.imm20_u
         
-        dado = self.imm20_u
+        dado = self.removerComplementoDe2()
         
         mem.setRegister(self.rd ,dado)
     def slt(self):
@@ -349,72 +350,25 @@ class instrucao():
         dado = rs1 << imm12_i
         
         mem.setRegister(self.rd,dado)
-    
-    def srai():
-        pass
-    
-    def srli():
-        pass
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-"""    
-    def achaInstucao(self):
+    def srli(self):
+        imm12_i = self.removeComplementoDe2_tipoI()
+        rs1 = mem.getRegister(self.rs1)
         
-        codigo = self.codigo[2]
+        # Realiza o deslocamento lógico para a direita
+        dado = rs1 >> imm12_i
         
-        if codigo == "add":
-            self.add()
-        if codigo == "addi":
-            self.addi()
-        if codigo == "and":
-            self.Funct_And()
-        if codigo == "andi":
-            self.andi()
-            
-            
-            
-    
-def lw(lista):#tipo i (tipo ,imm12_i,rs1,funct3,rd,opcode,shamt para as funcoes como slii)
-    constante  = lista[1]
-    
-    registradorEndereço = lista[2]
-    
-    dados = mem.lw(registradorEndereço,constante)
-    
-    mem.setRegister(hex(list[4]),dados)
-""" 
+        mem.setRegister(self.rd, dado)
+        
+    def srai(self):
+        imm12_i = self.removeComplementoDe2_tipoI()
+        rs1 = mem.getRegister(self.rs1)
+        
+        # Realiza o deslocamento aritmético para a direita
+        if rs1 < 0:  # Verifica se o número é negativo
+            dado = (rs1 >> imm12_i) | ((1 << (32 - imm12_i)) - 1)  # Preenche com 1 se for negativo
+        else:
+            dado = rs1 >> imm12_i  # Se for positivo, desloca normalmente
+        
+        mem.setRegister(self.rd, dado)
+
+#fim da classe
